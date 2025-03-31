@@ -38,6 +38,9 @@
     <div id="output"></div>
 
     <script>
+        // Globale Variablen für den Interpreter
+        const variables = {};
+
         // Basis-Konverter Funktionen
         function decodeBase64(input) {
             try {
@@ -121,15 +124,50 @@
             return array.reverse();
         }
 
-        // Code ausführen
+        // Interpreter - Code ausführen
         function runCode() {
             const code = document.getElementById('editor').value;
+            const lines = code.split('\n');
+            let output = '';
+
+            // Einfacher Interpreter: Zeilenweise Verarbeitung
+            for (let line of lines) {
+                line = line.trim();
+
+                if (line.startsWith('set')) {
+                    // Beispiel: set x = 5;
+                    const match = line.match(/^set\s+([a-zA-Z_]\w*)\s*=\s*(.*);$/);
+                    if (match) {
+                        const variableName = match[1];
+                        const value = evaluateExpression(match[2]);
+                        variables[variableName] = value;
+                    }
+                } else if (line.startsWith('print')) {
+                    // Beispiel: print(x);
+                    const match = line.match(/^print\((.*)\);$/);
+                    if (match) {
+                        const value = evaluateExpression(match[1]);
+                        output += value + '\n';
+                    }
+                }
+            }
+
+            // Ausgabe im HTML-Bereich
+            document.getElementById('output').textContent = output;
+        }
+
+        // Hilfsfunktion, um Ausdrücke zu evaluieren
+        function evaluateExpression(expression) {
             try {
-                // Einen sicheren Kontext für die Codeausführung erstellen
-                const output = eval(code);
-                document.getElementById('output').textContent = output;
+                // Variablen ersetzen
+                expression = expression.replace(/\b([a-zA-Z_]\w*)\b/g, (match) => {
+                    return variables.hasOwnProperty(match) ? variables[match] : match;
+                });
+
+                // Ausdrücke auswerten
+                return new Function('return ' + expression)();
             } catch (e) {
-                document.getElementById('output').textContent = "Fehler: " + e.message;
+                return "Fehler bei der Auswertung: " + e.message;
             }
         }
     </script>
