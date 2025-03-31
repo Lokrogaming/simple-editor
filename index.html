@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Language Editor</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #editor { width: 100%; height: 400px; }
+        #output { border: 1px solid #ccc; padding: 10px; margin-top: 10px; white-space: pre-line; }
+    </style>
+</head>
+<body>
+    <h1>Custom Language Editor</h1>
+    <textarea id="editor">// Währungsumrechner (Euro zu Dollar)
+set euro = 10;
+set kurs = 1.1;
+print("USD: " + (euro * kurs));
+
+// Binär-Konvertierung
+print("Binär: " + toBinary(10));
+
+// Morse-Code Konvertierung
+print("Morse: " + toMorse("HELLO WORLD"));
+
+// URL Kodierung und Dekodierung
+print("Encoded URL: " + encodeURL("Hallo Welt!"));
+print("Decoded URL: " + decodeURL("Hallo%20Welt!"));
+
+// Base64 Kodierung und Dekodierung
+print("Base64 Encoded: " + encodeBase64("Hallo Welt!"));
+print("Base64 Decoded: " + decodeBase64("SGFsbG8gV2VsdCE="));
+    </textarea>
+    <button onclick="runCode()">Run</button>
+    <div id="output"></div>
+    
+    <script>
+        function toBinary(n) {
+            return (n >>> 0).toString(2);
+        }
+
+        function toMorse(text) {
+            const morseDict = {
+                "A": ".-", "B": "-...", "C": "-.-.", "D": "-..", "E": ".",
+                "F": "..-.", "G": "--.", "H": "....", "I": "..", "J": ".---",
+                "K": "-.-", "L": ".-..", "M": "--", "N": "-.", "O": "---",
+                "P": ".--.", "Q": "--.-", "R": ".-.", "S": "...", "T": "-",
+                "U": "..-", "V": "...-", "W": ".--", "X": "-..-", "Y": "-.--",
+                "Z": "--..", " ": "/"
+            };
+            return text.split('').map(char => morseDict[char] || char).join(' ');
+        }
+
+        function encodeURL(text) {
+            return encodeURIComponent(text);
+        }
+        
+        function decodeURL(text) {
+            return decodeURIComponent(text);
+        }
+
+        function encodeBase64(text) {
+            return btoa(text);
+        }
+
+        function decodeBase64(text) {
+            return atob(text);
+        }
+        
+        function runCode() {
+            const code = document.getElementById("editor").value;
+            let output = "";
+            try {
+                output = eval(code);
+            } catch (e) {
+                output = "Fehler: " + e.message;
+            }
+            document.getElementById("output").innerText = output;
+        }
+    </script>
+</body>
+</html>
