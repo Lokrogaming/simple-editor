@@ -167,7 +167,7 @@
                     return variables.hasOwnProperty(match) ? variables[match] : match;
                 });
 
-                // Berechne den Wert des Ausdrucks
+                // Berechne den Wert des Ausdrucks (einfachere Berechnungsmethode)
                 return calculate(expression);
             } catch (e) {
                 return "Fehler bei der Auswertung: " + e.message;
@@ -176,10 +176,12 @@
 
         // Berechnung von einfachen Ausdrücken (mathematische Operationen)
         function calculate(expression) {
-            // Berechne mathematische Ausdrücke
+            // Erlaubte Zeichen und Operationen
+            const safeExpression = expression.replace(/[^0-9+\-*/().\s]/g, '');
+
             try {
-                // Hier definieren wir eine eigene Methode zum Auswerten der Ausdrücke
-                return eval(expression);
+                // Berechne den Ausdruck und gebe das Ergebnis zurück
+                return Function('return ' + safeExpression)();
             } catch (e) {
                 return "Fehler bei der Berechnung: " + e.message;
             }
