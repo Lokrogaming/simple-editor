@@ -3,80 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custom Language Editor</title>
+    <title>Online Code-Editor</title>
     <style>
-        body { font-family: Arial, sans-serif; }
-        #editor { width: 100%; height: 400px; }
-        #output { border: 1px solid #ccc; padding: 10px; margin-top: 10px; white-space: pre-line; }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 300px;
+            font-family: monospace;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border: 1px solid #ccc;
+        }
     </style>
 </head>
 <body>
-    <h1>Custom Language Editor</h1>
-    <textarea id="editor">// Währungsumrechner (Euro zu Dollar)
-set euro = 10;
-set kurs = 1.1;
-print("USD: " + (euro * kurs));
 
-// Binär-Konvertierung
-print("Binär: " + toBinary(10));
+    <h1>Online Code-Editor</h1>
+    <textarea id="editor" placeholder="Schreib deinen Code hier..."></textarea>
+    <button onclick="runCode()">Code ausführen</button>
 
-// Morse-Code Konvertierung
-print("Morse: " + toMorse("HELLO WORLD"));
-
-// URL Kodierung und Dekodierung
-print("Encoded URL: " + encodeURL("Hallo Welt!"));
-print("Decoded URL: " + decodeURL("Hallo%20Welt!"));
-
-// Base64 Kodierung und Dekodierung
-print("Base64 Encoded: " + encodeBase64("Hallo Welt!"));
-print("Base64 Decoded: " + decodeBase64("SGFsbG8gV2VsdCE="));
-    </textarea>
-    <button onclick="runCode()">Run</button>
     <div id="output"></div>
-    
+
     <script>
-        function toBinary(n) {
-            return (n >>> 0).toString(2);
-        }
-
-        function toMorse(text) {
-            const morseDict = {
-                "A": ".-", "B": "-...", "C": "-.-.", "D": "-..", "E": ".",
-                "F": "..-.", "G": "--.", "H": "....", "I": "..", "J": ".---",
-                "K": "-.-", "L": ".-..", "M": "--", "N": "-.", "O": "---",
-                "P": ".--.", "Q": "--.-", "R": ".-.", "S": "...", "T": "-",
-                "U": "..-", "V": "...-", "W": ".--", "X": "-..-", "Y": "-.--",
-                "Z": "--..", " ": "/"
-            };
-            return text.split('').map(char => morseDict[char] || char).join(' ');
-        }
-
-        function encodeURL(text) {
-            return encodeURIComponent(text);
-        }
-        
-        function decodeURL(text) {
-            return decodeURIComponent(text);
-        }
-
-        function encodeBase64(text) {
-            return btoa(text);
-        }
-
-        function decodeBase64(text) {
-            return atob(text);
-        }
-        
-        function runCode() {
-            const code = document.getElementById("editor").value;
-            let output = "";
+        // Basis-Konverter Funktionen
+        function decodeBase64(input) {
             try {
-                output = eval(code);
+                return atob(input); // JavaScript-Funktion zur Base64-Dekodierung
             } catch (e) {
-                output = "Fehler: " + e.message;
+                return "Fehler bei der Base64-Dekodierung.";
             }
-            document.getElementById("output").innerText = output;
+        }
+
+        function decodeURL(input) {
+            try {
+                return decodeURIComponent(input); // JavaScript-Funktion zur URL-Dekodierung
+            } catch (e) {
+                return "Fehler bei der URL-Dekodierung.";
+            }
+        }
+
+        function encodeBase64(input) {
+            try {
+                return btoa(input); // JavaScript-Funktion zur Base64-Kodierung
+            } catch (e) {
+                return "Fehler bei der Base64-Kodierung.";
+            }
+        }
+
+        function encodeURL(input) {
+            try {
+                return encodeURIComponent(input); // JavaScript-Funktion zur URL-Kodierung
+            } catch (e) {
+                return "Fehler bei der URL-Kodierung.";
+            }
+        }
+
+        // Mathematische Funktionen
+        function add(a, b) {
+            return a + b;
+        }
+
+        function subtract(a, b) {
+            return a - b;
+        }
+
+        function multiply(a, b) {
+            return a * b;
+        }
+
+        function divide(a, b) {
+            if (b === 0) {
+                return "Fehler: Division durch Null!";
+            }
+            return a / b;
+        }
+
+        // String-Operationen
+        function toUpperCase(input) {
+            return input.toUpperCase();
+        }
+
+        function toLowerCase(input) {
+            return input.toLowerCase();
+        }
+
+        function reverse(input) {
+            return input.split('').reverse().join('');
+        }
+
+        function trim(input) {
+            return input.trim();
+        }
+
+        // Array-Funktionen
+        function joinArray(array, separator) {
+            return array.join(separator);
+        }
+
+        function splitString(input, separator) {
+            return input.split(separator);
+        }
+
+        function reverseArray(array) {
+            return array.reverse();
+        }
+
+        // Code ausführen
+        function runCode() {
+            const code = document.getElementById('editor').value;
+            try {
+                // Einen sicheren Kontext für die Codeausführung erstellen
+                const output = eval(code);
+                document.getElementById('output').textContent = output;
+            } catch (e) {
+                document.getElementById('output').textContent = "Fehler: " + e.message;
+            }
         }
     </script>
+
 </body>
 </html>
