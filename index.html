@@ -160,14 +160,27 @@
         function evaluateExpression(expression) {
             try {
                 // Variablen ersetzen
+                expression = expression.trim();
+
+                // Ersetze Variablen mit ihren Werten
                 expression = expression.replace(/\b([a-zA-Z_]\w*)\b/g, (match) => {
                     return variables.hasOwnProperty(match) ? variables[match] : match;
                 });
 
-                // Ausdrücke auswerten
-                return new Function('return ' + expression)();
+                // Berechne den Wert des Ausdrucks
+                return calculate(expression);
             } catch (e) {
                 return "Fehler bei der Auswertung: " + e.message;
+            }
+        }
+
+        // Berechnung von einfachen Ausdrücken (mathematische Operationen)
+        function calculate(expression) {
+            // Berechne mathematische Ausdrücke
+            try {
+                return new Function('return ' + expression)();
+            } catch (e) {
+                return "Fehler bei der Berechnung: " + e.message;
             }
         }
     </script>
