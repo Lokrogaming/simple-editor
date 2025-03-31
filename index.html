@@ -178,7 +178,8 @@
         function calculate(expression) {
             // Berechne mathematische Ausdrücke
             try {
-                return new Function('return ' + expression)();
+                // Hier definieren wir eine eigene Methode zum Auswerten der Ausdrücke
+                return eval(expression);
             } catch (e) {
                 return "Fehler bei der Berechnung: " + e.message;
             }
